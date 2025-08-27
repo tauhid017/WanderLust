@@ -1,0 +1,76 @@
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+/* Examples */
+.light {
+  font-weight: 300; /* Light */
+}
+
+.regular {
+  font-weight: 400; /* Regular */
+}
+
+.medium {
+  font-weight: 500; /* Medium */
+}
+
+.semibold {
+  font-weight: 600; /* SemiBold */
+}
+
+
+.navbar{
+    height: 5rem;
+    background-color: white;
+}
+.fa-compass{
+    color: #fe424d;
+    font-size: 2rem;
+}
+
+.nav-link{
+    color: #222222 !important;
+}
+
+.card{
+    border: none !important;
+    margin-bottom: 2rem;
+}
+
+.card-img-top{
+    border-radius: 1rem !important;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+
+.card-body{
+    padding: 0 !important;
+}
+.card-text p{
+    font-weight: 400;
+}
+.listing-link {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+.card-img-overlay{
+    opacity: 0;
+}
+.card-img-overlay:hover{
+    opacity: 0.2;
+    background-color: aliceblue;
+
+}
+.show-img{
+    height: 30vh;
+}
+.show-button{
+    display: flex;
+
+}
+.show-card{
+    padding-left: 0;
+    padding-right: 0;
+    
+}
