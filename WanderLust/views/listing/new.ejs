@@ -3,15 +3,15 @@
     <div class="row">
         <div class="col-8 offset-2">
     <h3>Create a new lisiting </h3>
-    <form action="/listings" method="POST">
+    <form action="/listings" method="POST" class="needs-validation" novalidate> 
         <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" name="listing[title]" placeholder="title" class="form-control">
+            <label for="title" class="form-label" >Title</label>
+            <input type="text" name="listing[title]" placeholder="title" class="form-control" required>
         </div>
         
         <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <input type="text" name="listing[description]" placeholder="description" class="form-control">
+            <label for="description" class="form-label" >Description</label>
+            <input type="text" name="listing[description]" placeholder="description" class="form-control" required>
         </div>
         
         <div class="mb-3">
@@ -21,19 +21,19 @@
         <div class="row">
             <div class="mb-3 col-md-4 col-8-sm">
             <label for="price" class="form-label">Price</label>
-            <input type="number" name="listing[price]" placeholder="enter price" class="form-control">
+            <input type="number" name="listing[price]" placeholder="enter price" class="form-control" required>
         </div>
         
         <div class="mb-3 col-md-8 col-8-sm">
             <label for="country" class="form-label">Country</label>
-            <input type="text" name="listing[country]" placeholder="enter country" class="form-control">
+            <input type="text" name="listing[country]" placeholder="enter country" class="form-control" required>
         </div>
         </div>
         
         
         <div class="mb-3">
             <label for="location" class="form-label">Location</label>
-            <input type="text" name="listing[location]" placeholder="enter location" class="form-control">
+            <input type="text" name="listing[location]" placeholder="enter location" class="form-control" required>
         </div>
         
         <button class="btn btn-dark" style="background-color: #fe424d !important; border: none !important;">ADD</button>

@@ -5,10 +5,10 @@ const Listing = require("./models/listing")
 const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
-
+app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-app.use(express.urlencoded({ extended: true }));
+
 app.use(express.json());
 app.use(methodOverride("_method"));
 app.engine('ejs', ejsMate);
@@ -56,6 +56,7 @@ app.get("/listings/new",(req,res)=>{
 })
 
 app.post("/listings" ,async(req,res)=>{
+    console.log(req.body);
     let newListing = new Listing(req.body.listing);
     await newListing.save();
     res.redirect(('/listings'))
@@ -82,4 +83,4 @@ app.get("/listings/:id", async(req,res)=>{
     const {id} = req.params;
     let listing = await Listing.findById(id);
     res.render("listing/show.ejs",{listing});
-})
+}) 
