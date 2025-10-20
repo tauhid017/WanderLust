@@ -7,9 +7,11 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/wrapAsync");
 const ExpressError = require("./utils/ExpressErrors");
+const { resourceUsage } = require("process");
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+let{listingSchema}=require("./schema.js");
 
 app.use(express.json());
 app.use(methodOverride("_method"));
@@ -21,6 +23,18 @@ app.use(express.static(path.join(__dirname, "public")));
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 async function main() {
   await mongoose.connect(MONGO_URL);
+}
+
+
+
+const listingvalidation =(req,res,next)=>{
+    let {error} = listingSchema.validate(req.body);
+    if(error){
+            throw new ExpressError(400,error);
+        }
+        else{
+            next();
+        }
 }
 
 app.get("/", (req, res) => {
@@ -67,21 +81,9 @@ app.get("/listings/new", (req, res) => {
 
 app.post(
   "/listings",
+  listingvalidation,
   wrapAsync(async (req, res) => {
-    if (!req.body.listing) {
-      throw new ExpressError(400, "Send Valid Data for Listing");
-    }
     let newListing = new Listing(req.body.listing);
-    if(!req.body.listing.description){
-        throw new ExpressError(400, "Description cannot be empty");
-    }
-    if(!req.body.listing.title){
-        throw new ExpressError(400, "Title cannot be empty");
-    }
-    if(!req.body.listing.price){
-        throw new ExpressError(400, "Price cannot be empty");
-    }
-    
     await newListing.save();
     res.redirect("/listings");
   })
@@ -98,10 +100,8 @@ app.get(
 //update route
 app.put(
   "/listings/:id",
+  listingvalidation,
   wrapAsync(async (req, res) => {
-    if (!req.body.listing) {
-      throw new ExpressError(400, "Send Valid Data for Listing");
-    }
     let { id } = req.params;
     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
     res.redirect(`/listings/${id}`);
