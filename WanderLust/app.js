@@ -11,7 +11,8 @@ const { resourceUsage } = require("process");
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-let{listingSchema}=require("./schema.js");
+let{listingSchema,reviewSchema}=require("./schema.js");
+const Review = require("./models/review.js");
 
 app.use(express.json());
 app.use(methodOverride("_method"));
@@ -36,6 +37,18 @@ const listingvalidation =(req,res,next)=>{
             next();
         }
 }
+
+
+const validateReview =(req,res,next)=>{
+    let {error} = reviewSchema.validate(req.body);
+    if(error){
+            throw new ExpressError(400,error);
+        }
+        else{
+            next();
+        }
+}
+
 
 app.get("/", (req, res) => {
   res.send("Hi I am root");
@@ -116,19 +129,46 @@ app.delete(
     console.log(deleted);
   })
 );
+
+//reviews
+
+
+
 app.get(
   "/listings/:id",
   wrapAsync(async (req, res) => {
     const { id } = req.params;
-    let listing = await Listing.findById(id);
+    let listing = await Listing.findById(id).populate("reviews");
     res.render("listing/show.ejs", { listing });
   })
 );
+app.post('/listings/:id/reviews', validateReview ,wrapAsync(async(req,res)=>{
+    let listing = await Listing.findById(req.params.id);
+    let newReview = new Review(req.body.review);
+
+    listing.reviews.push(newReview);
+    await newReview.save();
+    await listing.save();
+    console.log("new review added");
+    
+    res.redirect(`/listings/${listing._id}`);
+
+}));
+
+
+
+//delete review route
+app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async (req,res)=>{
+    let{id,reviewId} = req.params;
+    await Listing.findByIdAndUpdate(id,{$pull:{reviews:reviewId}});
+    await Review.findByIdAndDelete(reviewId);
+    res.redirect(`/listings/${id}`);
+}))
+
 app.all(/.*/, (req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
 });
 app.use((err, req, res, next) => {
   let { statusCode = 500, message = "Something Went Wrong" } = err;
   res.render("error.ejs",{statusCode,message});
-//   res.status(statusCode).send(message);
 });
