@@ -5,11 +5,15 @@ const path = require("path");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressErrors");
-const listings = require("./routes/listings.js");
-const reviews = require("./routes/reviews.js");
+const listingsRoutes = require("./routes/listings.js");
+const reviewsRoutes = require("./routes/reviews.js");
+const usersRoutes = require("./routes/user.js");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user.js");
 
 // ---------------- MIDDLEWARE SETUP ----------------
 app.use(express.urlencoded({ extended: true }));
@@ -44,6 +48,23 @@ const sessionOptions = {
 app.use(cookieParser("supersecretkey")); // Move before session
 app.use(session(sessionOptions));
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());  
+
+
+
+app.get('/fakeuser', async(req,res)=>{
+  let fakeuser = new User({
+    email:"student@gmail.com",
+    username:"delta-student",
+  }) ;
+
+ let registeredUser = await User.register(fakeuser,"chicken");
+ res.send(registeredUser);
+});
 
 // Make flash messages globally available in all views
 app.use((req, res, next) => {
@@ -58,8 +79,9 @@ app.get("/", (req, res) => {
 });
 
 // Use your routes
-app.use("/listings", listings);
-app.use("/listings/:id/reviews", reviews);
+app.use("/listings", listingsRoutes);
+app.use("/listings/:id/reviews", reviewsRoutes);
+app.use("/", usersRoutes);
 
 // ---------------- ERROR HANDLING ----------------
 // app.all("*", (req, res, next) => {

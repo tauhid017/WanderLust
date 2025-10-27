@@ -4,7 +4,7 @@
   <!-- <form action="/listings/new" method="GET">
         <button>Create a new Lisitng </button>
     </form> -->
-  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
     <% for(let listing of allListing){ %>
     <div class="card col">
       <a href="/listings/<%= listing._id %>" class="listing-link">
@@ -25,4 +25,18 @@
     </div>
     <% } %>
   </div>
+
+  <style>
+    @media (max-width: 576px) {
+      .card img {
+        height: 15rem !important;
+      }
+    }
+    
+    @media (min-width: 577px) and (max-width: 768px) {
+      .card img {
+        height: 18rem !important;
+      }
+    }
+  </style>
 </body>
