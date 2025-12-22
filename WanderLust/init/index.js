@@ -11,8 +11,13 @@ main().then(()=>{
     console.log("ISKIMAA KA :",err);
 })
 
+
 const initdata=async()=>{
     await Listing.deleteMany({});
+    indata.data = indata.data.map((obj)=>({
+        ...obj,
+        owner: "69380a39e1cd1b9846aa9495"  
+    }));
     await Listing.insertMany(indata.data);
     console.log("Data has been initialized successfully!");
 }
