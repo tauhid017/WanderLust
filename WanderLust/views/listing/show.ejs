@@ -15,12 +15,14 @@
                         <p class="mb-0"><b>Price:</b> &#8377; <%= listing.price.toLocaleString("en-IN") %></p>
                     </div>
                 </div>
+                <%if(currUser && currUser._id.equals(listing.owner._id)){%>
                 <div class="d-flex justify-content-center gap-3 mb-4">
                     <a href="/listings/<%= listing._id %>/edit" class="btn btn-danger">Edit</a>
                     <form action="/listings/<%= listing._id %>?_method=DELETE" method="POST" style="display:inline;">
                         <button class="btn btn-dark">Delete</button>
                     </form>
                 </div>
+                <%}%>
             </div>
         </div>
         
